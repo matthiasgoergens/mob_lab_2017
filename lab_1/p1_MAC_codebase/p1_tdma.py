@@ -13,8 +13,7 @@ class TDMANode(WirelessNode):
         # any additional state or variables may be set here
 
     def channel_access(self, time, ptime, numnodes):
-        ## TODO: control channel access
-        pass
+        return time % numnodes == self.get_id()
 
     def on_collision(self, packet):
         pass
