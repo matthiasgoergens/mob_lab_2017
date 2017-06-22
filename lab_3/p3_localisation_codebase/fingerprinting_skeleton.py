@@ -3,8 +3,8 @@ import os
 import glob
 import sys
 import matplotlib.pyplot as plt
-from statsmodels.distributions.empirical_distribution import ECDF
-from scipy.stats import norm
+# from statsmodels.distributions.empirical_distribution import ECDF
+# from scipy.stats import norm
 
 
 #
@@ -23,6 +23,27 @@ def init():
     print ("")
     return
 
+def load_real_data_1(file):
+  "2017-06-22_15-02-47_wifi.csv"
+  import csv
+
+  # 1.498139656195E9,eduroam,00:81:c4:85:07:a0,2462,-60
+  # timestamp, ssid, mac, channel (ignore), rss
+  # only take ssid AP_1, AP_2, AP_3
+  return list((ssid, rss) for timestamp, ssid, mac, channel, rss in csv.reader(open(file, 'r')))
+
+def load_real_data(dir):
+  import os
+  return [(f, [(ssid, rss)
+          for (ssid, rss) in data
+            if ssid in ("AP_1", "AP_2", "AP_3")])
+      for (f, data) in list((f, load_real_data_1(os.path.join(dir, f))) for f in os.listdir(dir))]
+
+from pprint import pprint
+
+pprint (load_real_data("../real_data/training/rss/"))
+
+sys.exit(0)
 
 # Function to load the wifi RSS data
 def load_wifi_data(data_folder, n_samples, n_ap):
